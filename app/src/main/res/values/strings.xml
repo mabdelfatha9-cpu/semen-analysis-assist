@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">مساعد تحليل السائل المنوي</string>
+    <string name="app_name">Mono Chrome Analysis</string>
+
+    <string name="powered_by">Powered by Mono Chrome</string>
+    <string name="powered_by_subtitle">FOR IVD SOLUTIONS</string>
 
     <string name="disclaimer_title">تنبيه هام قبل الاستخدام</string>
-    <string name="disclaimer_body">هذا التطبيق أداة بحثية مساعدة (Assistive Tool) وليس جهازًا طبيًا معتمدًا.
-النتائج التي يقدمها تعتمد على تحليل حاسوبي أولي لفيديو مصوَّر عبر عدسة ميكروسكوب،
-ويجب أن تُراجَع دائمًا من قِبل فني مختبر أو طبيب مؤهل قبل اتخاذ أي قرار طبي.
-لا تعتمد على هذه النتائج بمفردها لتشخيص الخصوبة.</string>
+    <string name="disclaimer_body">هذا التطبيق أداة بحثية مساعدة (Assistive Tool) من Mono Chrome وليس جهازًا طبيًا معتمدًا.\nالنتائج تعتمد على تحليل حاسوبي أولي لفيديو أو صورة مصوَّرة عبر عدسة ميكروسكوب،\nويجب أن تُراجَع دائمًا من قِبل فني مختبر أو طبيب مؤهل قبل اتخاذ أي قرار طبي.\nلا تعتمد على هذه النتائج بمفردها لتشخيص الخصوبة.</string>
     <string name="disclaimer_agree">فهمت، أكمل</string>
 
     <string name="nav_calibrate">المعايرة</string>
@@ -13,8 +14,7 @@
     <string name="nav_history">السجل</string>
 
     <string name="calibration_title">معايرة الميكروسكوب</string>
-    <string name="calibration_instructions">صوّر شريحة المعايرة (Stage Micrometer) مرة واحدة قبل بدء أي تحليل.
-هذه الخطوة ضرورية لحساب التركيز بدقة، ويجب إعادتها كلما تغيّر التكبير أو الهاتف المستخدم.</string>
+    <string name="calibration_instructions">صوّر شريحة المعايرة (Stage Micrometer) مرة واحدة قبل بدء أي تحليل.\nهذه الخطوة ضرورية لحساب التركيز بدقة، ويجب إعادتها كلما تغيّر التكبير أو الهاتف المستخدم.</string>
     <string name="calibration_capture_button">تصوير شريحة المعايرة</string>
     <string name="calibration_manual_entry">أو أدخل قيمة المعايرة يدويًا (ميكرومتر لكل بكسل)</string>
     <string name="calibration_save">حفظ المعايرة</string>
@@ -27,6 +27,8 @@
     <string name="capture_stop_recording">إيقاف التسجيل</string>
     <string name="capture_recording_seconds">مدة التسجيل: %1$d ثانية</string>
     <string name="capture_upload_button">رفع الفيديو للتحليل</string>
+    <string name="capture_pick_image">رفع صورة جاهزة للتحليل</string>
+    <string name="capture_pick_video">اختيار فيديو من الجهاز</string>
     <string name="capture_chamber_depth_label">عمق الشريحة (ميكرومتر)</string>
     <string name="capture_dilution_label">عامل التخفيف</string>
     <string name="capture_analyzing">جاري التحليل...</string>
@@ -35,14 +37,17 @@
     <string name="report_title">نتيجة التحليل</string>
     <string name="report_concentration">التركيز التقديري</string>
     <string name="report_motility">الحركة</string>
+    <string name="report_morphology">الشكل (Morphology)</string>
     <string name="report_who_limit">حد WHO (الإصدار 6)</string>
     <string name="report_confidence">مستوى الثقة</string>
     <string name="report_warnings">تحذيرات</string>
-    <string name="report_review_section">مراجعة الفني</string>
+    <string name="report_review_section">مراجعة الفني + التعلم الذاتي</string>
     <string name="report_correct_concentration">تصحيح التركيز</string>
+    <string name="report_morphology_normal_percent">نسبة الأشكال الطبيعية %</string>
     <string name="report_note">ملاحظة</string>
-    <string name="report_save_review">حفظ المراجعة</string>
+    <string name="report_save_review">حفظ المراجعة (للتعلم الذاتي)</string>
     <string name="report_done">العودة للتصوير</string>
+    <string name="report_self_learning_hint">تصحيحاتك تُحفظ محليًا لتحسين النموذج لاحقًا (self-learning).</string>
 
     <string name="history_title">سجل العينات</string>
     <string name="history_empty">لا توجد عينات محفوظة بعد</string>
