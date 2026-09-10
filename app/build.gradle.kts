@@ -12,8 +12,8 @@ android {
         applicationId = "com.labtools.semenanalysis"
         minSdk = 26
         targetSdk = 34
-        versionCode = 5
-        versionName = "0.5.0-learning"
+        versionCode = 6
+        versionName = "0.6.0-labreport"
 
         buildConfigField(
             "String",
