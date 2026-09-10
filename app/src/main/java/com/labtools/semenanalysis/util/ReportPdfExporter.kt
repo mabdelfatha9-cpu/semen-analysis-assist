@@ -96,6 +96,9 @@ object ReportPdfExporter {
             r.patientSex?.takeIf { it.isNotBlank() }
         ).joinToString(" / ").ifBlank { "—" }
 
+        val abst = r.abstinenceDays
+        val abstText = if (abst != null) String.format(Locale.US, "%.0f days", abst) else "—"
+
         val metaLeft = listOf(
             "Patient Name : ${dash(r.patientName)}",
             "Age / Sex    : $ageSex",
@@ -106,7 +109,7 @@ object ReportPdfExporter {
             "Lab No        : $shortId",
             "Registration  : $dateStr",
             "Patient ID    : ${dash(r.patientId)}",
-            "Abstinence    : ${if (r.abstinenceDays != null) String.format(Locale.US, "%.0f days", r.abstinenceDays) else "—"}"
+            "Abstinence    : $abstText"
         )
         metaLeft.forEachIndexed { i, left ->
             c.drawText(left, MARGIN, y + 11f, small)
@@ -159,8 +162,10 @@ object ReportPdfExporter {
                 fillPaint.color = rowAlt
                 c.drawRect(MARGIN, y, tableRight, y + rowH, fillPaint)
             }
-            val resultPaint = Paint(small).apply {
-                if (highlightLow) { color = Color.rgb(180, 0, 0); isFakeBoldText = true }
+            val resultPaint = Paint(small)
+            if (highlightLow) {
+                resultPaint.color = Color.rgb(180, 0, 0)
+                resultPaint.isFakeBoldText = true
             }
             c.drawText(observation, colX[0] + 3f, y + 10f, small)
             c.drawText(result, colX[1] + 3f, y + 10f, resultPaint)
@@ -174,22 +179,30 @@ object ReportPdfExporter {
 
         drawColHeaders()
 
+        val ph = r.semenPh
+        val vol = r.volumeMl
+        val absDays = r.abstinenceDays
+
         drawHeaderRow("Physical Features")
         drawDataRow("Colour", dash(r.colour), "", "", "Physical Examination")
-        drawDataRow("Semen Ph", num(r.semenPh), "pH", "7.2-7.8", "Physical Examination",
-            highlightLow = r.semenPh != null && (r.semenPh < 7.2 || r.semenPh > 7.8))
-        drawDataRow("Volume [Semen]", num(r.volumeMl), "ml", ">1.5", "Physical Examination",
-            highlightLow = r.volumeMl != null && r.volumeMl < 1.5)
+        drawDataRow(
+            "Semen Ph", num(ph), "pH", "7.2-7.8", "Physical Examination",
+            highlightLow = ph != null && (ph < 7.2 || ph > 7.8)
+        )
+        drawDataRow(
+            "Volume [Semen]", num(vol), "ml", ">1.5", "Physical Examination",
+            highlightLow = vol != null && vol < 1.5
+        )
         drawDataRow("Viscosity", dash(r.viscosity), "", "NORMAL", "Physical Examination")
         drawDataRow("Appearance", dash(r.appearance), "", "", "Physical Examination")
         drawDataRow("Liquefaction Time", num(r.liquefactionTimeMin, "%.0f"), "Min.", "30-60", "Physical Examination")
         drawDataRow(
             "Abstinence Period",
-            if (r.abstinenceDays != null) String.format(Locale.US, "%.0f", r.abstinenceDays) else "—",
+            if (absDays != null) String.format(Locale.US, "%.0f", absDays) else "—",
             "Days",
             "2-7",
             "Patient History",
-            highlightLow = r.abstinenceDays != null && (r.abstinenceDays < 2 || r.abstinenceDays > 7)
+            highlightLow = absDays != null && (absDays < 2.0 || absDays > 7.0)
         )
 
         drawHeaderRow("Microscopic Features")
@@ -204,7 +217,7 @@ object ReportPdfExporter {
             highlightLow = conc < r.whoConcentrationLimitMillionPerMl
         )
 
-        val totalCount = if (r.volumeMl != null) conc * r.volumeMl else null
+        val totalCount = if (vol != null) conc * vol else null
         drawDataRow(
             "Total Sperm Count",
             num(totalCount),
@@ -248,23 +261,26 @@ object ReportPdfExporter {
         val normalForms = r.humanCorrectedNormalFormsPercent ?: r.estimatedNormalFormsPercent
         if (normalForms != null) {
             val abn = (100.0 - normalForms).coerceIn(0.0, 100.0)
-            drawDataRow("Normal Forms", num(normalForms), "%", ">4", "Morphology Assist",
-                highlightLow = normalForms < 4.0)
+            drawDataRow(
+                "Normal Forms", num(normalForms), "%", ">4", "Morphology Assist",
+                highlightLow = normalForms < 4.0
+            )
             drawDataRow("Abnormal Forms", num(abn), "%", "", "Morphology Assist")
         } else {
             drawDataRow("Normal Forms", "—", "%", ">4", "Morphology Assist")
             drawDataRow("Abnormal Forms", "—", "%", "", "Morphology Assist")
         }
 
+        val vitAlive = r.vitalityAlivePercent
         drawDataRow("Fructose [In Semen]", dash(r.fructose), "", "Positive", "Seliwanoff's")
         drawDataRow("Sperm Vitality-Dead", num(r.vitalityDeadPercent, "%.0f"), "%", "", "Microscopy")
         drawDataRow(
             "Sperm Vitality-Alive",
-            num(r.vitalityAlivePercent, "%.0f"),
+            num(vitAlive, "%.0f"),
             "%",
             ">58",
             "Microscopy",
-            highlightLow = r.vitalityAlivePercent != null && r.vitalityAlivePercent < 58.0
+            highlightLow = vitAlive != null && vitAlive < 58.0
         )
         drawDataRow("Pus Cells [Semen]", dash(r.pusCells), "/HPF", "", "Microscopy")
         drawDataRow("Round Cells [Semen]", dash(r.roundCells), "", "", "Microscopy")
@@ -281,8 +297,9 @@ object ReportPdfExporter {
             MARGIN, y, small
         )
         y += 12f
-        if (!r.reviewerNote.isNullOrBlank()) {
-            c.drawText("Technician note: ${r.reviewerNote!!.take(90)}", MARGIN, y, small)
+        val note = r.reviewerNote
+        if (!note.isNullOrBlank()) {
+            c.drawText("Technician note: ${note.take(90)}", MARGIN, y, small)
             y += 12f
         }
 
@@ -321,9 +338,9 @@ object ReportPdfExporter {
         doc.finishPage(page)
 
         val dir = File(context.cacheDir, "reports").apply { mkdirs() }
-        val file = File(dir, "SA_Report_${shortId}.pdf")
-        FileOutputStream(file).use { doc.writeTo(it) }
+        val out = File(dir, "SA_Report_${shortId}.pdf")
+        FileOutputStream(out).use { doc.writeTo(it) }
         doc.close()
-        return file
+        return out
     }
 }
