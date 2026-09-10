@@ -15,9 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.labtools.semenanalysis.R
 
 @Composable
@@ -29,6 +32,23 @@ fun DisclaimerScreen(onAgree: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Text(
+            text = stringResource(R.string.powered_by),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF00B4E4),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = stringResource(R.string.powered_by_subtitle),
+            style = MaterialTheme.typography.labelMedium,
+            color = Color(0xFF666666),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            letterSpacing = 2.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.disclaimer_title),
             style = MaterialTheme.typography.headlineSmall,
