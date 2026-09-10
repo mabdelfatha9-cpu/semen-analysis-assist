@@ -22,13 +22,13 @@
     <string name="calibration_required_warning">لا توجد معايرة محفوظة. يجب إجراء المعايرة أولًا.</string>
 
     <string name="capture_title">تصوير العينة</string>
-    <string name="capture_align_hint">ضع الهاتف فوق عدسة الميكروسكوب وحاذِ الدائرة مع مجال الرؤية</string>
-    <string name="capture_start_recording">بدء التسجيل</string>
+    <string name="capture_align_hint">ضع الهاتف فوق عدسة الميكروسكوب وحاذِ الدائرة مع مجال الرؤية — أو اختر فيديو/صورة من المعرض</string>
+    <string name="capture_start_recording">بدء تسجيل فيديو بالكاميرا</string>
     <string name="capture_stop_recording">إيقاف التسجيل</string>
     <string name="capture_recording_seconds">مدة التسجيل: %1$d ثانية</string>
     <string name="capture_upload_button">رفع الفيديو للتحليل</string>
-    <string name="capture_pick_image">رفع صورة جاهزة للتحليل</string>
-    <string name="capture_pick_video">اختيار فيديو من الجهاز</string>
+    <string name="capture_pick_image">📷 رفع صورة من الهاتف</string>
+    <string name="capture_pick_video">🎬 إضافة فيديو من الهاتف (المعرض)</string>
     <string name="capture_chamber_depth_label">عمق الشريحة (ميكرومتر)</string>
     <string name="capture_dilution_label">عامل التخفيف</string>
     <string name="capture_analyzing">جاري التحليل...</string>
@@ -38,6 +38,7 @@
     <string name="report_concentration">التركيز التقديري</string>
     <string name="report_motility">الحركة</string>
     <string name="report_morphology">الشكل (Morphology)</string>
+    <string name="report_charts">الرسوم البيانية</string>
     <string name="report_who_limit">حد WHO (الإصدار 6)</string>
     <string name="report_confidence">مستوى الثقة</string>
     <string name="report_warnings">تحذيرات</string>
