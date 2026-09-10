@@ -4,12 +4,32 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <group android:scaleX="0.5"
-        android:scaleY="0.5"
-        android:translateX="27"
-        android:translateY="27">
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M54,30c-13.2,0 -24,10.8 -24,24s10.8,24 24,24 24,-10.8 24,-24 -10.8,-24 -24,-24zM54,66c-6.6,0 -12,-5.4 -12,-12s5.4,-12 12,-12 12,5.4 12,12 -5.4,12 -12,12z"/>
-    </group>
+    <!-- Cyan molecular structure inspired by Mono Chrome logo -->
+    <path
+        android:fillColor="#00B4E4"
+        android:pathData="M54,28c-3.3,0 -6,2.7 -6,6s2.7,6 6,6 6,-2.7 6,-6 -2.7,-6 -6,-6z"/>
+    <path
+        android:fillColor="#00B4E4"
+        android:pathData="M38,42c-3.3,0 -6,2.7 -6,6s2.7,6 6,6 6,-2.7 6,-6 -2.7,-6 -6,-6z"/>
+    <path
+        android:fillColor="#00B4E4"
+        android:pathData="M70,42c-3.3,0 -6,2.7 -6,6s2.7,6 6,6 6,-2.7 6,-6 -2.7,-6 -6,-6z"/>
+    <path
+        android:fillColor="#00B4E4"
+        android:pathData="M32,62c-3.3,0 -6,2.7 -6,6s2.7,6 6,6 6,-2.7 6,-6 -2.7,-6 -6,-6z"/>
+    <path
+        android:fillColor="#00B4E4"
+        android:pathData="M54,58c-3.3,0 -6,2.7 -6,6s2.7,6 6,6 6,-2.7 6,-6 -2.7,-6 -6,-6z"/>
+    <path
+        android:fillColor="#00B4E4"
+        android:pathData="M76,62c-3.3,0 -6,2.7 -6,6s2.7,6 6,6 6,-2.7 6,-6 -2.7,-6 -6,-6z"/>
+    <path
+        android:strokeColor="#00B4E4"
+        android:strokeWidth="2.5"
+        android:fillColor="#00000000"
+        android:pathData="M54,34L38,48M54,34L70,48M38,48L32,62M38,48L54,64M70,48L76,62M70,48L54,64M32,68L54,64M76,68L54,64"/>
+    <!-- Red droplet -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M54,18c0,0 -8,10 -8,16a8,8 0 1,0 16,0c0,-6 -8,-16 -8,-16z"/>
 </vector>
