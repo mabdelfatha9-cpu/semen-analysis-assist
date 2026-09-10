@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">مساعد تحليل السائل المنوي</string>
+
+    <string name="disclaimer_title">تنبيه هام قبل الاستخدام</string>
+    <string name="disclaimer_body">هذا التطبيق أداة بحثية مساعدة (Assistive Tool) وليس جهازًا طبيًا معتمدًا.
+النتائج التي يقدمها تعتمد على تحليل حاسوبي أولي لفيديو مصوَّر عبر عدسة ميكروسكوب،
+ويجب دائمًا مراجعتها من قبل فني مختبر مؤهل قبل أي استخدام طبي أو قرار علاجي.
+لا تستخدم النتائج لاتخاذ قرارات سريرية دون تحقق بشري مستقل.</string>
+    <string name="disclaimer_agree">أوافق وأفهم القيود</string>
+
+    <string name="calibration_title">معايرة النظام</string>
+    <string name="calibration_hint">أدخل قيمة الميكرون لكل بكسل (من شريحة المعايرة) وعمق الحجرة.</string>
+    <string name="microns_per_pixel">ميكرون لكل بكسل</string>
+    <string name="chamber_depth">عمق الحجرة (ميكرون)</string>
+    <string name="save_calibration">حفظ المعايرة</string>
+    <string name="view_history">سجل العينات</string>
+
+    <string name="capture_title">تصوير العينة</string>
+    <string name="start_recording">بدء التسجيل</string>
+    <string name="stop_recording">إيقاف التسجيل</string>
+    <string name="upload_analyze">رفع وتحليل</string>
+    <string name="recalibrate">إعادة المعايرة</string>
+
+    <string name="report_title">تقرير التحليل</string>
+    <string name="concentration">التركيز</string>
+    <string name="motility">الحركة</string>
+    <string name="review_and_correct">مراجعة وتصحيح</string>
+    <string name="save_review">حفظ المراجعة</string>
+    <string name="done">تم</string>
+
+    <string name="history_title">سجل العينات</string>
+    <string name="no_samples">لا توجد عينات محفوظة بعد</string>
+</resources>
