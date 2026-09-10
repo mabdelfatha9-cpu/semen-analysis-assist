@@ -86,7 +86,7 @@ fun ClinicalDataScreen(
     }
 
     if (loading) {
-        Column(Modifier = Modifier.fillMaxSize().padding(24.dp)) {
+        Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
             Text("جاري التحميل…")
         }
         return
@@ -108,7 +108,7 @@ fun ClinicalDataScreen(
             color = Color(0xFF00B4E4),
             style = MaterialTheme.typography.labelMedium
         )
-        Spacer(Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         SectionTitle("بيانات المريض")
         Field(patientName, { patientName = it }, "اسم المريض (Patient Name)")
@@ -124,7 +124,7 @@ fun ClinicalDataScreen(
             KeyboardType.Decimal
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         SectionTitle("الفحص الفيزيائي (Physical Features)")
         Field(colour, { colour = it }, "اللون (Colour)")
         Field(semenPh, { semenPh = it }, "pH", KeyboardType.Decimal)
@@ -138,7 +138,7 @@ fun ClinicalDataScreen(
             KeyboardType.Decimal
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         SectionTitle("حقول إضافية (اختياري)")
         Field(fructose, { fructose = it }, "Fructose")
         Field(vitalityAlive, { vitalityAlive = it }, "Vitality Alive %", KeyboardType.Decimal)
@@ -146,7 +146,7 @@ fun ClinicalDataScreen(
         Field(pusCells, { pusCells = it }, "Pus Cells")
         Field(roundCells, { roundCells = it }, "Round Cells")
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 scope.launch {
@@ -179,7 +179,7 @@ fun ClinicalDataScreen(
         ) {
             Text("حفظ والمتابعة للتقرير")
         }
-        Spacer(Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
