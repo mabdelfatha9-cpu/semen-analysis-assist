@@ -4,30 +4,48 @@
     <string name="disclaimer_title">تنبيه هام قبل الاستخدام</string>
     <string name="disclaimer_body">هذا التطبيق أداة بحثية مساعدة (Assistive Tool) وليس جهازًا طبيًا معتمدًا.
 النتائج التي يقدمها تعتمد على تحليل حاسوبي أولي لفيديو مصوَّر عبر عدسة ميكروسكوب،
-ويجب دائمًا مراجعتها من قبل فني مختبر مؤهل قبل أي استخدام طبي أو قرار علاجي.
-لا تستخدم النتائج لاتخاذ قرارات سريرية دون تحقق بشري مستقل.</string>
-    <string name="disclaimer_agree">أوافق وأفهم القيود</string>
+ويجب أن تُراجَع دائمًا من قِبل فني مختبر أو طبيب مؤهل قبل اتخاذ أي قرار طبي.
+لا تعتمد على هذه النتائج بمفردها لتشخيص الخصوبة.</string>
+    <string name="disclaimer_agree">فهمت، أكمل</string>
 
-    <string name="calibration_title">معايرة النظام</string>
-    <string name="calibration_hint">أدخل قيمة الميكرون لكل بكسل (من شريحة المعايرة) وعمق الحجرة.</string>
-    <string name="microns_per_pixel">ميكرون لكل بكسل</string>
-    <string name="chamber_depth">عمق الحجرة (ميكرون)</string>
-    <string name="save_calibration">حفظ المعايرة</string>
-    <string name="view_history">سجل العينات</string>
+    <string name="nav_calibrate">المعايرة</string>
+    <string name="nav_capture">تصوير عينة</string>
+    <string name="nav_history">السجل</string>
+
+    <string name="calibration_title">معايرة الميكروسكوب</string>
+    <string name="calibration_instructions">صوّر شريحة المعايرة (Stage Micrometer) مرة واحدة قبل بدء أي تحليل.
+هذه الخطوة ضرورية لحساب التركيز بدقة، ويجب إعادتها كلما تغيّر التكبير أو الهاتف المستخدم.</string>
+    <string name="calibration_capture_button">تصوير شريحة المعايرة</string>
+    <string name="calibration_manual_entry">أو أدخل قيمة المعايرة يدويًا (ميكرومتر لكل بكسل)</string>
+    <string name="calibration_save">حفظ المعايرة</string>
+    <string name="calibration_saved">تم حفظ المعايرة بنجاح</string>
+    <string name="calibration_required_warning">لا توجد معايرة محفوظة. يجب إجراء المعايرة أولًا.</string>
 
     <string name="capture_title">تصوير العينة</string>
-    <string name="start_recording">بدء التسجيل</string>
-    <string name="stop_recording">إيقاف التسجيل</string>
-    <string name="upload_analyze">رفع وتحليل</string>
-    <string name="recalibrate">إعادة المعايرة</string>
+    <string name="capture_align_hint">ضع الهاتف فوق عدسة الميكروسكوب وحاذِ الدائرة مع مجال الرؤية</string>
+    <string name="capture_start_recording">بدء التسجيل</string>
+    <string name="capture_stop_recording">إيقاف التسجيل</string>
+    <string name="capture_recording_seconds">مدة التسجيل: %1$d ثانية</string>
+    <string name="capture_upload_button">رفع الفيديو للتحليل</string>
+    <string name="capture_chamber_depth_label">عمق الشريحة (ميكرومتر)</string>
+    <string name="capture_dilution_label">عامل التخفيف</string>
+    <string name="capture_analyzing">جاري التحليل...</string>
+    <string name="capture_error">حدث خطأ أثناء التحليل</string>
 
-    <string name="report_title">تقرير التحليل</string>
-    <string name="concentration">التركيز</string>
-    <string name="motility">الحركة</string>
-    <string name="review_and_correct">مراجعة وتصحيح</string>
-    <string name="save_review">حفظ المراجعة</string>
-    <string name="done">تم</string>
+    <string name="report_title">نتيجة التحليل</string>
+    <string name="report_concentration">التركيز التقديري</string>
+    <string name="report_motility">الحركة</string>
+    <string name="report_who_limit">حد WHO (الإصدار 6)</string>
+    <string name="report_confidence">مستوى الثقة</string>
+    <string name="report_warnings">تحذيرات</string>
+    <string name="report_review_section">مراجعة الفني</string>
+    <string name="report_correct_concentration">تصحيح التركيز</string>
+    <string name="report_note">ملاحظة</string>
+    <string name="report_save_review">حفظ المراجعة</string>
+    <string name="report_done">العودة للتصوير</string>
 
     <string name="history_title">سجل العينات</string>
-    <string name="no_samples">لا توجد عينات محفوظة بعد</string>
+    <string name="history_empty">لا توجد عينات محفوظة بعد</string>
+    <string name="history_reviewed">تمت المراجعة</string>
+    <string name="history_pending">بانتظار المراجعة</string>
 </resources>
