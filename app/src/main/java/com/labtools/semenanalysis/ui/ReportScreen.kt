@@ -96,7 +96,9 @@ fun ReportScreen(
         return
     }
 
-    val concDisplay = String.format("%.1f", current.estimatedConcentrationMillionPerMl)
+    val displayConc = current.humanCorrectedConcentration
+        ?: current.estimatedConcentrationMillionPerMl
+    val concDisplay = String.format("%.1f", displayConc)
     val confidenceDisplay = String.format("%.0f", current.concentrationConfidenceScore * 100)
 
     Column(
@@ -134,7 +136,7 @@ fun ReportScreen(
                         WhoReferenceLimits6thEdition.CONCENTRATION_MILLION_PER_ML + " مليون/مل",
                     style = MaterialTheme.typography.bodySmall
                 )
-                if (current.concentrationBelowReferenceLimit) {
+                if (displayConc < current.whoConcentrationLimitMillionPerMl) {
                     Text(
                         text = "⚠ أقل من الحد المرجعي",
                         color = MaterialTheme.colorScheme.error
@@ -186,6 +188,11 @@ fun ReportScreen(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Charts based on results
+        ResultChartsSection(report = current)
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -249,7 +256,6 @@ fun ReportScreen(
                     report = updated
                     reviewSaved = true
 
-                    // Push to server self-learning library (best-effort)
                     try {
                         val plain = "text/plain".toMediaTypeOrNull()
                         val resp = RetrofitClient.api.submitFeedback(
