@@ -20,7 +20,7 @@ android {
         buildConfigField(
             "String",
             "BACKEND_BASE_URL",
-            "\"${project.findProperty(\"backendUrl\") ?: \"http://10.0.2.2:8000/\"}\""
+            "\"${project.findProperty("backendUrl") ?: "http://10.0.2.2:8000/"}\""
         )
     }
 
