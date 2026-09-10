@@ -37,8 +37,11 @@ import com.labtools.semenanalysis.R
 import com.labtools.semenanalysis.data.AppDatabase
 import com.labtools.semenanalysis.data.SampleReportEntity
 import com.labtools.semenanalysis.model.WhoReferenceLimits6thEdition
+import com.labtools.semenanalysis.network.RetrofitClient
 import com.labtools.semenanalysis.util.ReportPdfExporter
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @Composable
 fun ReportScreen(
@@ -56,6 +59,7 @@ fun ReportScreen(
     var morphologyText by remember { mutableStateOf("") }
     var noteText by remember { mutableStateOf("") }
     var reviewSaved by remember { mutableStateOf(false) }
+    var serverMsg by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(sampleId) {
         report = dao.getById(sampleId)
@@ -156,12 +160,6 @@ fun ReportScreen(
                     MotilityRow("غير تقدمية (NP)", current.nonProgressiveMotilityPercent)
                     MotilityRow("غير متحركة (IM)", current.immotilePercent)
                     MotilityRow("إجمالي الحركة", current.totalMotilityPercent, emphasize = true)
-                    if (current.motilityBelowReferenceLimit == true) {
-                        Text(
-                            text = "⚠ أقل من حد WHO للحركة",
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -186,34 +184,12 @@ fun ReportScreen(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-                Text(
-                    text = "حد WHO التقريبي للأشكال الطبيعية ≈ 4٪",
-                    style = MaterialTheme.typography.bodySmall
-                )
             }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (current.warnings.isNotEmpty()) {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.report_warnings),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    current.warnings.forEach { w ->
-                        Text("• " + w, style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-
-        Text(
-            text = stringResource(R.string.report_review_section),
-            style = MaterialTheme.typography.titleMedium
-        )
+        Text(stringResource(R.string.report_review_section), style = MaterialTheme.typography.titleMedium)
         Text(
             text = stringResource(R.string.report_self_learning_hint),
             style = MaterialTheme.typography.bodySmall,
@@ -228,9 +204,7 @@ fun ReportScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         OutlinedTextField(
             value = morphologyText,
             onValueChange = { morphologyText = it },
@@ -238,9 +212,7 @@ fun ReportScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         OutlinedTextField(
             value = noteText,
             onValueChange = { noteText = it },
@@ -251,10 +223,13 @@ fun ReportScreen(
 
         if (reviewSaved) {
             Text(
-                text = "تم حفظ المراجعة ✓ (للاستخدام في self-learning)",
+                text = "تم حفظ المراجعة محليًا ✓",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
+        }
+        serverMsg?.let {
+            Text(it, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(bottom = 8.dp))
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -273,6 +248,26 @@ fun ReportScreen(
                     dao.update(updated)
                     report = updated
                     reviewSaved = true
+
+                    // Push to server self-learning library (best-effort)
+                    try {
+                        val plain = "text/plain".toMediaTypeOrNull()
+                        val resp = RetrofitClient.api.submitFeedback(
+                            sampleId = sampleId.toRequestBody(plain),
+                            estimatedConcentration = current.estimatedConcentrationMillionPerMl
+                                .toString().toRequestBody(plain),
+                            humanConcentration = correctedValue?.toString()?.toRequestBody(plain),
+                            humanNormalForms = morphValue?.toString()?.toRequestBody(plain),
+                            reviewerNote = noteText.ifBlank { null }?.toRequestBody(plain)
+                        )
+                        serverMsg = if (resp.isSuccessful) {
+                            resp.body()?.message ?: "تم رفع المراجعة للسيرفر (مكتبة التعلم)"
+                        } else {
+                            "حُفظ محليًا — رفع السيرفر فشل: " + resp.code()
+                        }
+                    } catch (e: Exception) {
+                        serverMsg = "حُفظ محليًا — السيرفر غير متاح: " + (e.message ?: "")
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -290,22 +285,16 @@ fun ReportScreen(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-
         Button(onClick = onDone, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.report_done))
         }
-
         Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
 @Composable
 private fun MotilityRow(label: String, percent: Double?, emphasize: Boolean = false) {
-    val percentText = if (percent != null) {
-        String.format("%.1f", percent) + "٪"
-    } else {
-        "—"
-    }
+    val percentText = if (percent != null) String.format("%.1f", percent) + "٪" else "—"
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
         Text(
             text = label,
