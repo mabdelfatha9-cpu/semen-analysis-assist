@@ -44,6 +44,12 @@ data class MorphologyResponse(
     val warnings: List<String>
 )
 
+data class FeedbackResponse(
+    val ok: Boolean,
+    val sampleId: String,
+    val message: String
+)
+
 interface ApiService {
 
     @Multipart
@@ -62,7 +68,6 @@ interface ApiService {
         @Part("dilution_factor") dilutionFactor: RequestBody
     ): Response<AnalysisResponse>
 
-    /** Single still image concentration (no motility). */
     @Multipart
     @POST("analyze/concentration-image")
     suspend fun analyzeConcentrationImage(
@@ -84,4 +89,15 @@ interface ApiService {
     suspend fun analyzeMorphology(
         @Part image: MultipartBody.Part
     ): Response<MorphologyResponse>
+
+    /** Send technician corrections to the self-learning library on the server. */
+    @Multipart
+    @POST("feedback")
+    suspend fun submitFeedback(
+        @Part("sample_id") sampleId: RequestBody,
+        @Part("estimated_concentration") estimatedConcentration: RequestBody?,
+        @Part("human_concentration") humanConcentration: RequestBody?,
+        @Part("human_normal_forms_percent") humanNormalForms: RequestBody?,
+        @Part("reviewer_note") reviewerNote: RequestBody?
+    ): Response<FeedbackResponse>
 }
