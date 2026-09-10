@@ -15,10 +15,11 @@ android {
         versionCode = 2
         versionName = "0.2.0-railway"
 
+        // Railway public backend
         buildConfigField(
             "String",
             "BACKEND_BASE_URL",
-            "\"${project.findProperty(\"backendUrl\") ?: \"https://semen-analysis-backend-production.up.railway.app/\"}\""
+            "\"https://semen-analysis-backend-production.up.railway.app/\""
         )
     }
 
