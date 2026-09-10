@@ -5,11 +5,6 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 
-/**
- * One row per analyzed sample. This table IS the "self-learning library":
- * technician reviews + morphology corrections become labeled data points
- * for future model training.
- */
 @Entity(tableName = "sample_reports")
 @TypeConverters(StringListConverter::class)
 data class SampleReportEntity(
@@ -31,11 +26,35 @@ data class SampleReportEntity(
     val motilityBelowReferenceLimit: Boolean? = null,
     val tracksAnalyzed: Int? = null,
 
-    // Morphology (forms) — AI estimate and/or human correction
     val estimatedNormalFormsPercent: Double? = null,
     val morphologyConfidenceScore: Double? = null,
 
     val warnings: List<String> = emptyList(),
+
+    // —— Clinical / patient meta ——
+    val patientName: String? = null,
+    val patientAge: String? = null,
+    val patientSex: String? = null,
+    val referredBy: String? = null,
+    val centre: String? = null,
+    val patientId: String? = null,
+    /** Abstinence period in days (مدة الامتناع). */
+    val abstinenceDays: Double? = null,
+
+    // —— Physical examination ——
+    val colour: String? = null,
+    val semenPh: Double? = null,
+    val volumeMl: Double? = null,
+    val viscosity: String? = null,
+    val appearance: String? = null,
+    val liquefactionTimeMin: Double? = null,
+
+    // Optional extra micro fields entered by lab
+    val fructose: String? = null,
+    val vitalityAlivePercent: Double? = null,
+    val vitalityDeadPercent: Double? = null,
+    val pusCells: String? = null,
+    val roundCells: String? = null,
 
     val reviewedByHuman: Boolean = false,
     val humanCorrectedConcentration: Double? = null,
