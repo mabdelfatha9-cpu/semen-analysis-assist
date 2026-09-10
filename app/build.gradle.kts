@@ -12,13 +12,13 @@ android {
         applicationId = "com.labtools.semenanalysis"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0-assist"
+        versionCode = 2
+        versionName = "0.2.0-railway"
 
         buildConfigField(
             "String",
             "BACKEND_BASE_URL",
-            "\"${project.findProperty("backendUrl") ?: "http://10.0.2.2:8000/"}\""
+            "\"${project.findProperty(\"backendUrl\") ?: \"https://semen-analysis-backend-production.up.railway.app/\"}\""
         )
     }
 
