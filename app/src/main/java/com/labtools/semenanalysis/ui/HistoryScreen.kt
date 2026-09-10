@@ -1,6 +1,5 @@
 package com.labtools.semenanalysis.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,11 +33,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Lists every saved sample. This is the "library" the earlier discussion
- * promised: each row shows whether a technician has reviewed/corrected it
- * yet, since unreviewed rows are just computer guesses, not labeled data.
- */
 @Composable
 fun HistoryScreen(
     onBack: () -> Unit,
@@ -53,12 +47,17 @@ fun HistoryScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Text(text = stringResource(R.string.history_title), style = MaterialTheme.typography.headlineSmall)
-        Text(text = stringResource(R.string.history_empty), style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = stringResource(R.string.history_title),
+            style = MaterialTheme.typography.headlineSmall
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         if (reports.isEmpty()) {
-            Text(text = stringResource(R.string.history_empty), style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = stringResource(R.string.history_empty),
+                style = MaterialTheme.typography.bodyLarge
+            )
         } else {
             LazyColumn(modifier = Modifier.weight(1f, fill = false).fillMaxWidth()) {
                 items(reports, key = { it.sampleId }) { report ->
@@ -78,6 +77,10 @@ fun HistoryScreen(
 @Composable
 private fun HistoryRow(report: SampleReportEntity, onClick: () -> Unit) {
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()) }
+    val concText = String.format("%.1f", report.estimatedConcentrationMillionPerMl)
+    val motilityPart = report.totalMotilityPercent?.let {
+        "  •  حركة " + String.format("%.0f", it) + "٪"
+    } ?: ""
 
     Card(
         modifier = Modifier
@@ -99,8 +102,7 @@ private fun HistoryRow(report: SampleReportEntity, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = "${\"%.1f\".format(report.estimatedConcentrationMillionPerMl)} مليون/مل"
-                        + (report.totalMotilityPercent?.let { "  •  حركة ${\"%.0f\".format(it)}٪" } ?: ""),
+                    text = concText + " مليون/مل" + motilityPart,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -111,7 +113,11 @@ private fun HistoryRow(report: SampleReportEntity, onClick: () -> Unit) {
             } else {
                 MaterialTheme.colorScheme.error
             }
-            Text(text = statusText, color = statusColor, style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = statusText,
+                color = statusColor,
+                style = MaterialTheme.typography.labelMedium
+            )
         }
     }
 }
