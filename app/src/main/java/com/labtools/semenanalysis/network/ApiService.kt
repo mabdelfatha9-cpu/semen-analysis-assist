@@ -37,11 +37,15 @@ data class MotilityResponse(
     val warnings: List<String>
 )
 
+data class MorphologyResponse(
+    val sampleId: String,
+    val normalFormsPercent: Double,
+    val confidenceScore: Double,
+    val warnings: List<String>
+)
+
 interface ApiService {
 
-    /**
-     * Upload a photo of a stage micrometer to compute microns-per-pixel.
-     */
     @Multipart
     @POST("calibrate")
     suspend fun calibrate(
@@ -49,11 +53,6 @@ interface ApiService {
         @Part("known_distance_microns") knownDistanceMicrons: RequestBody
     ): Response<CalibrationResponse>
 
-    /**
-     * Upload a short video of the sample (recorded through the eyepiece)
-     * plus calibration + chamber depth, and receive back a concentration
-     * report per WHO 6th-edition reference limits.
-     */
     @Multipart
     @POST("analyze/concentration")
     suspend fun analyzeConcentration(
@@ -63,15 +62,26 @@ interface ApiService {
         @Part("dilution_factor") dilutionFactor: RequestBody
     ): Response<AnalysisResponse>
 
-    /**
-     * Uses the SAME video already uploaded for concentration to classify
-     * motility (progressive / non-progressive / immotile) via frame-to-frame
-     * tracking on the backend.
-     */
+    /** Single still image concentration (no motility). */
+    @Multipart
+    @POST("analyze/concentration-image")
+    suspend fun analyzeConcentrationImage(
+        @Part image: MultipartBody.Part,
+        @Part("microns_per_pixel") micronsPerPixel: RequestBody,
+        @Part("chamber_depth_microns") chamberDepthMicrons: RequestBody,
+        @Part("dilution_factor") dilutionFactor: RequestBody
+    ): Response<AnalysisResponse>
+
     @Multipart
     @POST("analyze/motility")
     suspend fun analyzeMotility(
         @Part video: MultipartBody.Part,
         @Part("microns_per_pixel") micronsPerPixel: RequestBody
     ): Response<MotilityResponse>
+
+    @Multipart
+    @POST("analyze/morphology")
+    suspend fun analyzeMorphology(
+        @Part image: MultipartBody.Part
+    ): Response<MorphologyResponse>
 }
