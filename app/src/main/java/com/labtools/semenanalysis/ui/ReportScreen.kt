@@ -81,6 +81,9 @@ fun ReportScreen(
         return
     }
 
+    val concDisplay = String.format("%.1f", current.estimatedConcentrationMillionPerMl)
+    val confidenceDisplay = String.format("%.0f", current.concentrationConfidenceScore * 100)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -100,11 +103,12 @@ fun ReportScreen(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "${\"%.1f\".format(current.estimatedConcentrationMillionPerMl)} مليون/مل",
+                    text = concDisplay + " مليون/مل",
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Text(
-                    text = "${stringResource(R.string.report_who_limit)}: ${WhoReferenceLimits6thEdition.CONCENTRATION_MILLION_PER_ML} مليون/مل",
+                    text = stringResource(R.string.report_who_limit) + ": " +
+                        WhoReferenceLimits6thEdition.CONCENTRATION_MILLION_PER_ML + " مليون/مل",
                     style = MaterialTheme.typography.bodySmall
                 )
                 if (current.concentrationBelowReferenceLimit) {
@@ -114,7 +118,7 @@ fun ReportScreen(
                     )
                 }
                 Text(
-                    text = "${stringResource(R.string.report_confidence)}: ${\"%.0f\".format(current.concentrationConfidenceScore * 100)}٪",
+                    text = stringResource(R.string.report_confidence) + ": " + confidenceDisplay + "٪",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -122,7 +126,6 @@ fun ReportScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Motility section
         if (current.totalMotilityPercent != null) {
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -153,14 +156,13 @@ fun ReportScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                     current.warnings.forEach { w ->
-                        Text("• $w", style = MaterialTheme.typography.bodySmall)
+                        Text("• " + w, style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
         }
 
-        // Human review section
         Text(
             text = stringResource(R.string.report_review_section),
             style = MaterialTheme.typography.titleMedium
@@ -228,6 +230,11 @@ fun ReportScreen(
 
 @Composable
 private fun MotilityRow(label: String, percent: Double?, emphasize: Boolean = false) {
+    val percentText = if (percent != null) {
+        String.format("%.1f", percent) + "٪"
+    } else {
+        "—"
+    }
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
         Text(
             text = label,
@@ -235,7 +242,7 @@ private fun MotilityRow(label: String, percent: Double?, emphasize: Boolean = fa
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = percent?.let { "${\"%.1f\".format(it)}٪" } ?: "—",
+            text = percentText,
             style = if (emphasize) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium
         )
     }
