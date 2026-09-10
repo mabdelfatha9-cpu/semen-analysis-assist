@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,16 +22,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.labtools.semenanalysis.R
 import com.labtools.semenanalysis.data.AppDatabase
 import com.labtools.semenanalysis.data.SampleReportEntity
 import com.labtools.semenanalysis.model.WhoReferenceLimits6thEdition
+import com.labtools.semenanalysis.util.ReportPdfExporter
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,12 +47,13 @@ fun ReportScreen(
 ) {
     val context = LocalContext.current
     val dao = remember { AppDatabase.getInstance(context).sampleReportDao() }
-    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     var report by remember { mutableStateOf<SampleReportEntity?>(null) }
     var loading by remember { mutableStateOf(true) }
 
     var correctedText by remember { mutableStateOf("") }
+    var morphologyText by remember { mutableStateOf("") }
     var noteText by remember { mutableStateOf("") }
     var reviewSaved by remember { mutableStateOf(false) }
 
@@ -54,6 +63,8 @@ fun ReportScreen(
         report?.let {
             correctedText = it.humanCorrectedConcentration?.toString()
                 ?: it.estimatedConcentrationMillionPerMl.toString()
+            morphologyText = (it.humanCorrectedNormalFormsPercent
+                ?: it.estimatedNormalFormsPercent)?.toString() ?: ""
             noteText = it.reviewerNote ?: ""
         }
     }
@@ -93,6 +104,14 @@ fun ReportScreen(
         Text(
             text = stringResource(R.string.report_title),
             style = MaterialTheme.typography.headlineSmall
+        )
+        Text(
+            text = stringResource(R.string.powered_by),
+            color = Color(0xFF00B4E4),
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp,
+            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            textAlign = TextAlign.Start
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -148,6 +167,34 @@ fun ReportScreen(
             Spacer(modifier = Modifier.height(12.dp))
         }
 
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.report_morphology),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                val forms = current.humanCorrectedNormalFormsPercent
+                    ?: current.estimatedNormalFormsPercent
+                if (forms != null) {
+                    Text(
+                        text = String.format("%.1f", forms) + "٪ أشكال طبيعية",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                } else {
+                    Text(
+                        text = "أدخل نسبة الأشكال الطبيعية بعد المراجعة اليدوية.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Text(
+                    text = "حد WHO التقريبي للأشكال الطبيعية ≈ 4٪",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         if (current.warnings.isNotEmpty()) {
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -167,15 +214,28 @@ fun ReportScreen(
             text = stringResource(R.string.report_review_section),
             style = MaterialTheme.typography.titleMedium
         )
+        Text(
+            text = stringResource(R.string.report_self_learning_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.Gray
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = correctedText,
             onValueChange = { correctedText = it },
             label = { Text(stringResource(R.string.report_correct_concentration)) },
-            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = KeyboardType.Decimal
-            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = morphologyText,
+            onValueChange = { morphologyText = it },
+            label = { Text(stringResource(R.string.report_morphology_normal_percent)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -191,7 +251,7 @@ fun ReportScreen(
 
         if (reviewSaved) {
             Text(
-                text = "تم حفظ المراجعة ✓",
+                text = "تم حفظ المراجعة ✓ (للاستخدام في self-learning)",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
@@ -202,10 +262,12 @@ fun ReportScreen(
         Button(
             onClick = {
                 val correctedValue = correctedText.toDoubleOrNull()
+                val morphValue = morphologyText.toDoubleOrNull()
                 scope.launch {
                     val updated = current.copy(
                         reviewedByHuman = true,
                         humanCorrectedConcentration = correctedValue,
+                        humanCorrectedNormalFormsPercent = morphValue,
                         reviewerNote = noteText.ifBlank { null }
                     )
                     dao.update(updated)
@@ -216,6 +278,15 @@ fun ReportScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.report_save_review))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = { ReportPdfExporter.exportAndShare(context, current) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("طباعة / مشاركة التقرير PDF")
         }
 
         Spacer(modifier = Modifier.height(12.dp))
