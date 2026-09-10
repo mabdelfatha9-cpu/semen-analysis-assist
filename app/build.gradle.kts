@@ -12,8 +12,8 @@ android {
         applicationId = "com.labtools.semenanalysis"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.3.0-monochrome"
+        versionCode = 4
+        versionName = "0.4.0-monochrome"
 
         buildConfigField(
             "String",
